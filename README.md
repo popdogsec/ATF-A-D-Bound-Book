@@ -3,4 +3,4 @@ This is a SQL Database for recording firearms aquisition and disposition informa
 
 
 
-While the intention of this project is to make a compliant solution, this project is not guarenteed to be compliant. Use at your own risk and ideally consult a lawyer specializing in FFL compliance regardless of what solution you choose to manage your bound book. 
+While the intention of this project is to make a compliant solution, this project makes no claims regarding its compliance. Use at your own risk and ideally consult a lawyer specializing in FFL compliance regardless of what solution you choose to manage your bound book. 
