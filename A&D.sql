@@ -20,6 +20,8 @@ dispositionFFL VARCHAR(20),
 
 Constraint PK_BoundBook PRIMARY KEY (aquisitionDate, serial));
 
+GO
+
 CREATE PROCEDURE aquisition
 
 @FromFFL BOOLEAN,
