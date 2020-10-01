@@ -24,7 +24,7 @@ GO
 
 CREATE PROCEDURE aquisition
 
-@FromFFL BOOLEAN,
+@FromFFL BIT,
 @aquisitionDate DATE,
 @aquisitionType VARCHAR(100),
 @aquisitionName VARCHAR(100),
@@ -40,25 +40,25 @@ CREATE PROCEDURE aquisition
 AS
 
 IF EXISTS(SELECT * FROM BoundBook WHERE serial = @serial AND dispositionDate IS NULL) 
-BEGIN
+	BEGIN
 
-IF (@FromFFL)
-BEGIN
-INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionFFL, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionFFL, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial)
-END
+		IF (@FromFFL = 1)
+		BEGIN
+			INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionFFL, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionFFL, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
+		END
 
-ELSE 
-BEGIN
-INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionAddress, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionAddress, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial)
-END
+		ELSE 
+		BEGIN
+			INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionAddress, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionAddress, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
+		END
 
-END
 
+	END
 GO
 
 CREATE PROCEDURE disposition
 
-@ToFFL BOOLEAN,
+@ToFFL BIT,
 @Serial VARCHAR(30),
 @dispositionDate DATE,
 @dispositionType VARCHAR(100),
@@ -69,19 +69,14 @@ CREATE PROCEDURE disposition
 
 AS
 
-IF(@ToFFL)
-BEGIN
+IF(@ToFFL = 1)
+	UPDATE BoundBook
+	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionFFL = @dispositionFFL
+	WHERE serial = @serial;
 
-UPDATE BoundBook
-SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionFFL = @dispositionFFL
-WHERE serial = @serial
-
-END
 ELSE
-BEGIN
+	UPDATE BoundBook
+	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionAddress = @dispositionAddress, disposition4473 = @disposition4473
+	WHERE serial = @serial;
 
-UPDATE BoundBook
-SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionAddress = @dispositionAddress, disposition4473 = @disposition4473
-WHERE serial = @serial
-
-END
+GO
