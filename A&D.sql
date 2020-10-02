@@ -11,9 +11,9 @@ importer VARCHAR(50),
 make VARCHAR(50) NOT NULL,
 caliberGauge VARCHAR(25) NOT NULL,
 serial VARCHAR(30) NOT NULL,
-dispositionDate DATE NOT NULL,
-dispositionType VARCHAR(100) NOT NULL,
-dispositionName VARCHAR(100) NOT NULL,
+dispositionDate DATE,
+dispositionType VARCHAR(100),
+dispositionName VARCHAR(100),
 dispositionAddress VARCHAR(100),
 disposition4473 VARCHAR(12),
 dispositionFFL VARCHAR(20),
@@ -39,20 +39,11 @@ CREATE PROCEDURE aquisition
 	
 AS
 
-IF EXISTS(SELECT * FROM BoundBook WHERE serial = @serial AND dispositionDate IS NULL) 
+IF EXISTS(SELECT * FROM BoundBook WHERE serial = @serial AND dispositionDate IS NULL) OR NOT EXISTS(SELECT * FROM BoundBook WHERE serial = @serial)
 	BEGIN
+		IF (@FromFFL = 1) INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionFFL, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionFFL, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
 
-		IF (@FromFFL = 1)
-		BEGIN
-			INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionFFL, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionFFL, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
-		END
-
-		ELSE 
-		BEGIN
-			INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionAddress, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionAddress, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
-		END
-
-
+		ELSE INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionAddress, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionAddress, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
 	END
 GO
 
