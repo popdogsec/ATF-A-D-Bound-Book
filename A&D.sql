@@ -15,7 +15,8 @@ dispositionDate DATE,
 dispositionType VARCHAR(100),
 dispositionName VARCHAR(100),
 dispositionAddress VARCHAR(100),
-disposition4473 VARCHAR(12),
+disposition4473 VARCHAR(12)
+dispositionNICS VARCHAR(15),
 dispositionFFL VARCHAR(20),
 
 Constraint PK_BoundBook PRIMARY KEY (aquisitionDate, serial));
@@ -59,7 +60,8 @@ CREATE PROCEDURE disposition
 @dispositionType VARCHAR(100),
 @dispositionName VARCHAR(100),
 @dispositionAddress VARCHAR(100),
-@disposition4473 VARCHAR(12),
+@disposition4473 VARCHAR(12)
+dispositionNICS VARCHAR(15),
 @dispositionFFL VARCHAR(20)
 
 AS
@@ -71,7 +73,7 @@ IF(@ToFFL = 1)
 
 ELSE
 	UPDATE BoundBook
-	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionAddress = @dispositionAddress, disposition4473 = @disposition4473
+	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionAddress = @dispositionAddress, disposition4473 = @disposition4473, dispositionNICS = @dispositionNICS
 	WHERE serial = @serial AND dispositionDate IS NULL;
 
 GO
