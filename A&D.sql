@@ -39,11 +39,15 @@ CREATE PROCEDURE aquisition
 	
 AS
 
-IF EXISTS(SELECT * FROM BoundBook WHERE serial = @serial AND dispositionDate IS NULL) OR NOT EXISTS(SELECT * FROM BoundBook WHERE serial = @serial)
+IF EXISTS(SELECT * FROM BoundBook WHERE serial = @serial AND dispositionDate IS NOT NULL) OR NOT EXISTS(SELECT * FROM BoundBook WHERE serial = @serial)
 	BEGIN
 		IF (@FromFFL = 1) INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionFFL, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionFFL, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
 
 		ELSE INSERT INTO BoundBook (aquisitionDate, aquisitionType, aquisitionName, aquisitionAddress, assetType, manufacturer, importer, make, caliberGauge, serial) VALUES (@aquisitionDate, @aquisitionType, @aquisitionName, @aquisitionAddress, @assetType, @manufacturer, @importer, @make, @caliberGauge, @serial);
+	END
+ELSE
+	BEGIN
+	PRINT 'Cannot aquire asset that has already been aquired but not disposed'
 	END
 GO
 
@@ -63,11 +67,11 @@ AS
 IF(@ToFFL = 1)
 	UPDATE BoundBook
 	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionFFL = @dispositionFFL
-	WHERE serial = @serial;
+	WHERE serial = @serial AND dispositionDate IS NULL;
 
 ELSE
 	UPDATE BoundBook
 	SET dispositionDate = @dispositionDate, dispositionType = @dispositionType, dispositionName = @dispositionName, dispositionAddress = @dispositionAddress, disposition4473 = @disposition4473
-	WHERE serial = @serial;
+	WHERE serial = @serial AND dispositionDate IS NULL;
 
 GO
